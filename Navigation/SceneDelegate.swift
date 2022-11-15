@@ -18,42 +18,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
     
       
-        let viewControllers = [createTabBarController(), createProfileViewController()]
         
         window = UIWindow (frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        window?.rootViewController = createTabBarController()
+        window?.rootViewController = TabBarController()
         window?.makeKeyAndVisible()
         
-        func createFeedViewController () -> UINavigationController {
-            
-            let feedViewController = FeedViewController ()
-            feedViewController.title = "Лента"
-            feedViewController.tabBarItem = UITabBarItem(title: "Лента", image: UIImage (systemName: "doc.richtext"), tag: 0)
-            
-            return UINavigationController(rootViewController: feedViewController)
-            
-        }
-        
-        func createProfileViewController () -> UINavigationController {
-            
-            let profileViewController = ProfileViewController ()
-            profileViewController.title = "Профиль"
-            profileViewController.tabBarItem = UITabBarItem (title: "Профиль", image: UIImage(systemName: "person.circle"),tag: 1)
-            
-            return UINavigationController (rootViewController: profileViewController)
-            
-        }
-        
-        func createTabBarController () -> UITabBarController {
-            
-            let tabBarController = UITabBarController ()
-            UITabBar.appearance().backgroundColor = .systemBlue
-            tabBarController.viewControllers = [createFeedViewController(), createProfileViewController()]
-            
-            return tabBarController
 
-        }
         
         
         
