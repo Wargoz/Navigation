@@ -9,19 +9,21 @@ import UIKit
 
 class ProfileHeaderView: UIView {
     
+    private var status = ""
+    
     private lazy var profileImage: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "CatPicture")
         imageView.contentMode = .scaleAspectFill
         imageView.layer.borderWidth = 3
         imageView.layer.borderColor = UIColor.white.cgColor
-        imageView.layer.cornerRadius = 50
+        imageView.layer.cornerRadius = 65
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
-    private lazy var statusLabel: UILabel = {
+    private lazy var profileNameLabel: UILabel = {
         let label = UILabel()
         label.text = "Hipster cat"
         label.textColor = .black
@@ -32,12 +34,26 @@ class ProfileHeaderView: UIView {
         return label
     }()
     
-    private lazy var textField: UITextField = {
-        let text = UITextField()
+    private lazy var statusLabel: UILabel = {
+        let text = UILabel()
         text.backgroundColor = .clear
-        let atrributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]
-        text.attributedPlaceholder = NSAttributedString(string: "Waiting for something.", attributes: atrributes)
+        text.text = "Waiting for something..."
         text.translatesAutoresizingMaskIntoConstraints = false
+        text.textColor = UIColor.gray
+        return text
+    }()
+    
+    private lazy var statusLabelTextField: UITextField = {
+        let text = UITextField()
+        text.backgroundColor = .white
+        let atrributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15)]
+        text.attributedPlaceholder = NSAttributedString(string: "Waiting for something.", attributes: atrributes)
+        text.layer.borderColor = UIColor.black.cgColor
+        text.layer.borderWidth = 1
+        text.layer.cornerRadius = 12
+        text.translatesAutoresizingMaskIntoConstraints = false
+        text.textColor = UIColor.black
+        text.addTarget(self, action: #selector(setStatus), for: .editingChanged)
         return text
     }()
     
@@ -55,11 +71,12 @@ class ProfileHeaderView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .gray
+        backgroundColor = .white
         addSubview(profileImage)
+        addSubview(profileNameLabel)
         addSubview(statusLabel)
-        addSubview(textField)
         addSubview(buttonText)
+        addSubview(statusLabelTextField)
         setConstraints()
     }
     
@@ -71,27 +88,38 @@ class ProfileHeaderView: UIView {
         NSLayoutConstraint.activate([
             profileImage.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 16),
             profileImage.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 16),
-            profileImage.widthAnchor.constraint(equalToConstant: 100),
-            profileImage.heightAnchor.constraint(equalToConstant: 100),
+            profileImage.widthAnchor.constraint(equalToConstant: 130),
+            profileImage.heightAnchor.constraint(equalToConstant: 130),
             
-            statusLabel.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 27),
-            statusLabel.leftAnchor.constraint(equalTo: profileImage.rightAnchor, constant: 27),
+            profileNameLabel.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 27),
+            profileNameLabel.leftAnchor.constraint(equalTo: profileImage.rightAnchor, constant: 10),
+            profileNameLabel.rightAnchor.constraint(equalTo: self.rightAnchor),
+            profileNameLabel.bottomAnchor.constraint(equalTo: profileImage.centerYAnchor),
+            
+//            textField.topAnchor.constraint(equalTo: statusLabel.bottomAnchor),
+            statusLabel.leftAnchor.constraint(equalTo: profileImage.rightAnchor, constant: 10),
             statusLabel.rightAnchor.constraint(equalTo: self.rightAnchor),
-            statusLabel.heightAnchor.constraint(equalToConstant: 50),
+            statusLabel.topAnchor.constraint(equalTo: profileImage.centerYAnchor),
+            statusLabel.bottomAnchor.constraint(equalTo: statusLabelTextField.topAnchor, constant: -10),
             
-            textField.topAnchor.constraint(equalTo: statusLabel.bottomAnchor),
-            textField.leftAnchor.constraint(equalTo: profileImage.rightAnchor, constant: 27),
-            textField.rightAnchor.constraint(equalTo: self.rightAnchor),
-            textField.heightAnchor.constraint(equalToConstant: 50),
-            
-            buttonText.topAnchor.constraint(equalTo: profileImage.bottomAnchor, constant: 16),
+            buttonText.topAnchor.constraint(equalTo: statusLabelTextField.bottomAnchor, constant: 10),
             buttonText.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -16),
             buttonText.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 16),
-            buttonText.heightAnchor.constraint(equalToConstant: 50)
+            buttonText.heightAnchor.constraint(equalToConstant: 50),
+            
+            statusLabelTextField.topAnchor.constraint(equalTo: statusLabel.bottomAnchor, constant: 10),
+            statusLabelTextField.heightAnchor.constraint(equalToConstant: 40),
+            statusLabelTextField.leftAnchor.constraint(equalTo: statusLabel.leftAnchor),
+            statusLabelTextField.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -10)
+
         ])
     }
     
+    @objc private func setStatus(_ textField: UITextField) {
+        status = statusLabelTextField.text!
+    }
+    
     @objc private func showStatus() {
-        print(textField.text!)
+        statusLabel.text = status
     }
 }
